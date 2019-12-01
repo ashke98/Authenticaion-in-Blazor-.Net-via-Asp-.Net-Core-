@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Todo.Server
+/Todo.Client/obj
+/Todo.Client/Properties
+/Todo.Data/obj
+/Todo.Server/bin/Debug/netcoreapp3.0
+/Todo.Server/obj
+/Todo.Server/Properties

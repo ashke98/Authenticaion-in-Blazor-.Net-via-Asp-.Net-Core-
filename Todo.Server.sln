@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Client", "Todo.Client\Todo.Client.csproj", "{A21034C7-2658-4BE7-9198-2A5283E484DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Server", "Todo.Server\Todo.Server.csproj", "{523E9CB2-DBA3-450D-A885-E56196EBD134}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Data", "Todo.Data\Todo.Data.csproj", "{3B41C035-1388-46DC-A6E7-FBF57CD311BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A21034C7-2658-4BE7-9198-2A5283E484DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A21034C7-2658-4BE7-9198-2A5283E484DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A21034C7-2658-4BE7-9198-2A5283E484DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A21034C7-2658-4BE7-9198-2A5283E484DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{523E9CB2-DBA3-450D-A885-E56196EBD134}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{523E9CB2-DBA3-450D-A885-E56196EBD134}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{523E9CB2-DBA3-450D-A885-E56196EBD134}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{523E9CB2-DBA3-450D-A885-E56196EBD134}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B41C035-1388-46DC-A6E7-FBF57CD311BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B41C035-1388-46DC-A6E7-FBF57CD311BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B41C035-1388-46DC-A6E7-FBF57CD311BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B41C035-1388-46DC-A6E7-FBF57CD311BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {37E95C92-9981-4819-BDEB-4B4F1254749E}
+	EndGlobalSection
+EndGlobal
