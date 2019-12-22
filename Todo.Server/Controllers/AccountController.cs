@@ -1,67 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Todo.Data;
+using Todo.Server.Methods;
 
 namespace Todo.Server.Controllers
 {
     public class AccountController : Controller
     {
-        private UnderlineContext _ctx;
+        private TodotaskContext _ctx;
 
-        public AccountController(UnderlineContext ctx)
+        public AccountController(TodotaskContext ctx)
         {
             _ctx = ctx;
         }
 
+        [HttpGet("/register")]
         public IActionResult Register()
         {
-            RegisterModel registerModel = new RegisterModel();
-
-            Role role = roleManager.Get(EnumRole.user);
-
-            registerModel = new RegisterModel
-            {
-                ConfirmPassword = "111111",
-                Password = "111111",
-                UserName = "a@a.com"
-            };
-
-            EnumAccount Result = accountManager.Register(registerModel, role);
-
-            return View(registerModel);
+            User user = new User();
+            return View(user);
         }
 
-        [HttpPost]
+        [HttpPost("/register")]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Register(RegisterModel registerModel)
+        public IActionResult Register(User user)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    Role role = roleManager.Get(EnumRole.user);
-
-                    EnumAccount Result = accountManager.Register(registerModel, role);
-
-                    TempData["sucess"] = Result.GetDisplayName();
+                    if (user.Id == 0)
+                    {
+                        _ctx.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Added;
+                        _ctx.SaveChanges();
+                    }
 
                     return Redirect("/");
                 }
                 else
                 {
-                    TempData["error"] = EnumErrors.notvalidinputs.GetDisplayName();
-
-                    return View(registerModel);
+                    return View(user);
                 }
             }
             catch (Exception e)
             {
                 var error = e.Message; // log
-                TempData["error"] = EnumErrors.error.GetDisplayName();
-                return View(registerModel);
+                return View(user);
             }
         }
 
@@ -73,42 +64,37 @@ namespace Todo.Server.Controllers
 
         [HttpPost("/login")]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Login(LoginModel loginModel)
+        public async Task<IActionResult> Login(string username, string password, string rememberme)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    AuthModel Result = accountManager.Login(loginModel);
+                    User user = _ctx.Users.FirstOrDefault(m => m.UserName == username && m.Password == password);
 
-                    if (Result.EnumAccount == EnumAccount.success)
+                    if(user != null)
                     {
                         await HttpContext.SignInAsync(
-                                CookieAuthenticationDefaults.AuthenticationScheme,
-                                new ClaimsPrincipal(AuthenticationHelper.get_claimsIdentityAsync(loginModel.UserName, Result.UserID.ToString(), (int)EnumRole.admin)),
-                                AuthenticationHelper.get_authProperties(loginModel.RememberMe));
-
-                        TempData["success"] = Result.EnumAccount.GetDisplayName();
+                             CookieAuthenticationDefaults.AuthenticationScheme,
+                             new ClaimsPrincipal(AuthMethod.get_claimsIdentityAsync(username, user.Id.ToString(), user.RoleName)),
+                             AuthMethod.get_authProperties(rememberme == "on"));
 
                         return Redirect("/");
                     }
-
-                    TempData["error"] = Result.EnumAccount.GetDisplayName();
-
-                    return View(loginModel);
+                    else
+                    {
+                        return View();
+                    }
                 }
                 else
                 {
-                    TempData["error"] = EnumErrors.notvalidinputs.GetDisplayName();
-
-                    return View(loginModel);
+                    return View();
                 }
             }
             catch (Exception e)
             {
                 var error = e.Message; // log
-                TempData["error"] = EnumErrors.error.GetDisplayName();
-                return View(loginModel);
+                return View();
             }
         }
 

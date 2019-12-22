@@ -18,5 +18,19 @@
     </app>
 
     <script src="_framework/blazor.server.js"></script>
+    <script src="jquery/dist/jquery.js"></script>
+    <script>
+        window.statusview = {
+            update: function (id, status) {
+                if (status == 'done') {
+                    document.getElementById("task_" + id).style.textDecoration  = "line-through";
+                }
+                else {
+                    document.getElementById("task_" + id).style.textDecoration  = "none";
+                }
+            },
+        };
+    </script>
+
 </body>
 </html>

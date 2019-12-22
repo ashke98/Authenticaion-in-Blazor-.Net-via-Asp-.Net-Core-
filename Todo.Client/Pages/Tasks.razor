@@ -1,0 +1,98 @@
+﻿@page "/tasks"
+
+@inject Todo.Client.Data.TaskService TaskService
+@inject Todo.Client.Data.UserService UserService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@inject IJSRuntime jsRuntime
+
+<h1>Tasks List</h1>
+
+<p>This component demonstrates fetching tasks from a service.</p>
+
+@if (auth.User.IsInRole("Admin"))
+{
+    <a href="addtask" class="btn btn-primary mb-3"> Add New</a>
+}
+
+@if (tasks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Task is for</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in tasks)
+            {
+                <tr>
+                    <td>
+                        <span id="task_@task.Id" style="@(task.Status == "done"? "text-decoration: line-through;" : "")">
+                            @task.Title
+                        </span>
+                    </td>
+                    <td>@task.User.Name @task.User.Surname</td>
+                    <td>
+                        @if (auth.User.IsInRole("Admin"))
+                        {
+                            <span>
+                                @task.Status
+                            </span>
+                        }
+                        else
+                        {
+                            <select value="@task.Status" @onchange="(args) => UpdateStatus(args, task.Id)" class="form-control">
+                                <option value="not started">not started</option>
+                                <option value="in progress">in progress</option>
+                                <option value="test">test</option>
+                                <option value="done">done</option>
+                            </select>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [CascadingParameter]
+    private AuthenticationState auth { get; set; }
+
+    List<Todo.Data.Task> tasks;
+
+    Todo.Data.User user;
+
+    int userid;
+
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        auth = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (auth.User.IsInRole("User"))
+        {
+            userid = UserService.GetUserId(auth.User);
+            user = await UserService.Get(userid);
+            tasks = await TaskService.GetAll(userid);
+        }
+        else
+        {
+            tasks = await TaskService.GetAll();
+        }
+    }
+
+    protected async Task UpdateStatus(ChangeEventArgs e, int id)
+    {
+        await TaskService.UpdateStatus(id, e.Value.ToString());
+
+        await jsRuntime.InvokeAsync<object>("statusview.update", id, e.Value.ToString());
+    }
+}

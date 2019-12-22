@@ -1,5 +1,29 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-Welcome to your new app.
+<h1>
+    Welcome to your new app.!
+</h1>
+
+@if (auth.User.IsInRole("Admin"))
+{
+    <h6>Hello Admin, @auth.User.Identity.Name</h6>
+}
+else if (auth.User.IsInRole("User"))
+{
+    <h6>Hello Normal User, @auth.User.Identity.Name</h6>
+}
+
+<p>You can only see this content if you're authenticated.</p>
+
+@code{
+    [CascadingParameter]
+    private AuthenticationState auth { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        auth = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    }
+
+}
